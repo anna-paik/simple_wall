@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Succesful Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        h1{
+            display: inline;
+            padding: 10px;
+            color: gray;
+        }
+        .header{
+            border-bottom: 1px solid lightgrey;
+            padding: 20px;
+        }
+        .container{
+            width: 970px;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+        h2{
+            display: inline;
+            margin-left: 100px;
+            padding: 10px;
+            color: rgb(97, 150, 97);
+        }
+        .header a{
+            display: inline;
+            margin-left: 150px;
+            padding: 10px;
+        } 
+        .display_message{   
+            display: inline-block;
+            padding: 10px;    
+        } 
+        .display_message p{
+            width: 200px;
+            display: inline-block;
+        }
+        .create_message{        
+            display: inline-block;
+            margin-left: 185px;
+            padding: 10px;
+            vertical-align: top;          
+        }    
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <div class='header'>
+            <h1>Simple Message Wall</h1>
+            <h2>Welcome {{session['first_name']}}!</h2>
+            <a href='/logout'>Logoff</a>        
+        </div>       
+        <div class='display_message'>
+            <p>You have <strong>{{y}}</strong> message(s)<strong>{{session['first_name']}}</strong></p>
+            {% for text in texts %}
+            <form action='/delete' method='post'>
+                <p>{{text['first_name']}} said ({{ text['created_at'] | duration_elapsed }}):</p>
+                <p>"{{text['message']}}"</p>
+                <input type='hidden' name='sender_id' value="{{text['sender_id']}}">
+                <input type='hidden' name='message_id' value="{{text['message_id']}}">
+                <button type='submit' value='submit' name='del' class="btn"><i class="fa fa-trash"></i></button>
+            </form>
+            {% endfor %}        
+        </div>
+        <div class='create_message'>          
+            <p><strong>Send a message</strong><br>You have sent a total of <strong>{{x}}</strong> messages</p>                             
+            {% for user in users %}
+            {% if user['id'] != session['userid']: %}
+            <p>{{user['first_name']}}</p>  
+            <form action='/create_message' method='post'>
+                <textarea name='send'></textarea>
+                <input type='hidden' name='recipient_id' value="{{user['id']}}">
+                <button type='submit' name='submit'>Send</button>               
+            </form> 
+            {% endif %}
+            {% endfor %}
+        </div>  
+
+    </div>
+</body>
+</html>
